@@ -48,7 +48,7 @@ class Install():
         self.modem_dropdown = ttk.OptionMenu(self.root, self.modem_var, self.modem_choices[0], *self.modem_choices)
         self.modem_dropdown.pack(padx=10, pady=5, fill="x")
 
-        self.check_ipauto_val = tk.IntVar(value=0)
+        self.check_ipauto_val = tk.BooleanVar(value=False)
         self.check_ipauto = tk.Checkbutton(self.root, text="Auto IP reset timer discovery", variable=self.check_ipauto_val)
         self.check_ipauto.pack(pady=10)
 

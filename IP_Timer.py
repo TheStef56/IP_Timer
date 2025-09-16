@@ -8,7 +8,7 @@ PASSWORD      = CONFIG["CONFIG"]["password"]
 RESET_TIMEOUT = int(CONFIG["CONFIG"]["reset_timeout"])
 INTERVAL      = int(CONFIG["CONFIG"]["interval"])
 MODEM         = CONFIG["CONFIG"]["modem"]
-AUTO          = CONFIG["CONFIG"]["auto"]
+AUTO          = CONFIG["CONFIG"]["auto"] == "True"
 URL           = CONFIG["CONFIG"]["url"]
 PLACEMENT     = CONFIG["CONFIG"]["placement"]
 
@@ -22,6 +22,8 @@ def validate_placement(pl):
         delim = "+" if "+" in off else "-"
         int(off.split(delim)[0])
         int(off.split(delim)[1])
+        if pl[0] == "+":
+            pl = pl[1:]
         return True
     except:
         return False
@@ -41,9 +43,10 @@ async def update_rendering(root):
 def ip_timeout_auto_discovery(conn_time):
     global LAST_TIME, CONFIG
     if conn_time < LAST_TIME:
-        CONFIG["CONFIG"]["reset_timeout"] = LAST_TIME
+        CONFIG["CONFIG"]["reset_timeout"] = str(LAST_TIME)
+        CONFIG["CONFIG"]["auto"] = "False"
         with open("config.ini", "w") as f:
-            CONFIG.write(f) 
+            CONFIG.write(f)
     LAST_TIME = conn_time
 
 async def update_label(label):
@@ -72,7 +75,7 @@ async def main():
     root = Tk()
     root.title("overlay")
     if not validate_placement(PLACEMENT):
-        PLACEMENT = "+0+0"
+        PLACEMENT = "0+0"
     root.geometry(f'85x30+{PLACEMENT}') 
     root.overrideredirect(True) 
     root.attributes("-transparentcolor","black") 
