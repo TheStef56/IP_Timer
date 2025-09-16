@@ -3,6 +3,9 @@ import requests, hashlib, asyncio, subprocess, time
 async def get_connection_time(username, password, url):
     if not url:
         url = "http://192.168.0.1"
+    host = url.split("//")[1]
+    sep = ":" if ":" in host else "/"
+    host = host.split(sep)[0]
     headers = {
         "referer": "strict-origin-when-cross-origin",
         "Accept": "*/*",
@@ -12,7 +15,7 @@ async def get_connection_time(username, password, url):
         "Connection": "keep-alive",
         "Content-Length": "56",
         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        "Host": "192.168.0.1",
+        "Host": host,
         "Origin": f"{url}",
         "Pragma": "no-cache",
         "Referer": f"{url}/login.html",
@@ -44,6 +47,9 @@ async def get_connection_time(username, password, url):
 def restart_modem_connection(username, password, url):
     if not url:
         url = "http://192.168.0.1"
+    host = url.split("//")[1]
+    sep = ":" if ":" in host else "/"
+    host = host.split(sep)[0]
     headers = {
         "referer": "strict-origin-when-cross-origin",
         "Accept": "*/*",
@@ -53,7 +59,7 @@ def restart_modem_connection(username, password, url):
         "Connection": "keep-alive",
         "Content-Length": "56",
         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        "Host": "192.168.0.1",
+        "Host": host,
         "Origin": f"{url}",
         "Pragma": "no-cache",
         "Referer": f"{url}/login.html",
