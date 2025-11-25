@@ -11,6 +11,7 @@ class Install():
                 None, "runas", sys.executable, " ".join(sys.argv), None, 0
             )
             sys.exit()
+        self.folder = None
         self.root = tk.Tk()
         self.root.title("Configuration Form")
         self.root.geometry("400x660")
@@ -88,16 +89,16 @@ class Install():
         except: pass
 
     def install(self):
-        username  = self.username_entry.get()
-        password  = self.password_entry.get()
-        reset     = self.reset_timeout_entry.get()
-        interval  = self.interval_entry.get()
-        modem     = self.modem_var.get()
-        auto      = self.check_ipauto_val.get()
-        sym       = self.check_symlinks_val.get()
-        url       = self.url.get()
-        placement = self.overlay_placement.get()
-
+        username   = self.username_entry.get()
+        password   = self.password_entry.get()
+        reset      = self.reset_timeout_entry.get()
+        interval   = self.interval_entry.get()
+        modem      = self.modem_var.get()
+        auto       = self.check_ipauto_val.get()
+        sym        = self.check_symlinks_val.get()
+        url        = self.url.get()
+        placement  = self.overlay_placement.get()
+ 
         if not username:
             messagebox.showerror("Error", "No username was provided!")
             return

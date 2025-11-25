@@ -1,4 +1,5 @@
 import datetime, asyncio, configparser, importlib
+from plyer import notification
 from tkinter import Tk, Label
 
 CONFIG = configparser.ConfigParser()
@@ -13,6 +14,7 @@ URL           = CONFIG["CONFIG"]["url"]
 PLACEMENT     = CONFIG["CONFIG"]["placement"]
 
 LAST_TIME = 0
+MESSAGES = None
 
 def validate_placement(pl):
     try:
@@ -34,6 +36,7 @@ def import_from_path(path: str):
     return getattr(module, func_name)
 
 get_connection_time = import_from_path(f"modems.{MODEM}.get_connection_time")
+get_messages = import_from_path(f"modems.{MODEM}.get_messages")
 
 async def update_rendering(root):
     while True:
@@ -50,9 +53,22 @@ def ip_timeout_auto_discovery(conn_time):
     LAST_TIME = conn_time
 
 async def update_label(label):
+    global MESSAGES, AUTO, RESET_TIMEOUT, INTERVAL, USERNAME, PASSWORD, URL
     while True:
         try:
             conn_time = await get_connection_time(USERNAME, PASSWORD, URL)
+            fetched_messages = await get_messages(USERNAME, PASSWORD, URL)
+            if MESSAGES is None and conn_time:
+                MESSAGES = fetched_messages
+            elif MESSAGES != fetched_messages and conn_time:
+                    diff = [x for x in fetched_messages if x not in MESSAGES]
+                    for msg in diff:
+                        notification.notify(
+                            title=msg["phone"],
+                            message=msg["msg"],
+                            timeout=5
+                        )
+                    MESSAGES = fetched_messages
             if AUTO:
                 ip_timeout_auto_discovery(conn_time)                
             await asyncio.sleep(0.01)
