@@ -40,6 +40,7 @@ class modemLogin():
                 continue
             self.headers.update({"Cookie": cookie})
             print("GOT COOKIE!")
+            return self.headers
         return None
     
     async def asyncGetCookieHeaders(self):
@@ -94,6 +95,7 @@ def restart_modem_connection(username, password, url):
     if not headers:
         print("ERROR: DIDN'T GET COOKIE!")
         subprocess.run("pause", shell=True)
+        return
 
     print("SENDING DISCONNECT PAYLOAD...")
     r = requests.get(f"{login.url}/goform/setSimWanInfo?mobileData=1&dataRoaming=1&dataOptions=1&profileIndex=0&action=0", headers=headers, allow_redirects=True)
